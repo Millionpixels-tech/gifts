@@ -1,6 +1,7 @@
 import 'package:gifts/router/router_names.dart';
 import 'package:gifts/screens/auth/login_page.dart';
 import 'package:gifts/screens/auth/signup_page.dart';
+import 'package:gifts/screens/home_page.dart';
 import 'package:go_router/go_router.dart';
 
 class RouterClass{
@@ -11,7 +12,7 @@ class RouterClass{
       name: RouterNames.login,
       pageBuilder: (context, state) {
           return NoTransitionPage(
-              child: const LoginPage(),
+              child: const HomePage(),
           );
         },
       ),
