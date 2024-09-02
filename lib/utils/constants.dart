@@ -18,7 +18,7 @@ class LightThemeAppColors {
   static const Color errorColor = Color(0xffF64242);
   static const Color onErrorColor = Color(0xffF00000);
   static const Color mainBlack = Color(0xff000000);
-  static const Color starColour = Color(0xffFFC700);
+  static const Color starColour = Color(0xffFFD233);
 }
 
 class AppFontSizes {
