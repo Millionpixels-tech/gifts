@@ -1,4 +1,5 @@
 import 'package:gifts/router/router_names.dart';
+import 'package:gifts/screens/Tracking_page.dart';
 import 'package:gifts/screens/address_details.dart';
 import 'package:gifts/screens/auth/login_page.dart';
 import 'package:gifts/screens/auth/signup_page.dart';
@@ -14,7 +15,7 @@ class RouterClass{
       name: RouterNames.login,
       pageBuilder: (context, state) {
           return NoTransitionPage(
-              child: const AddressDetails(),
+              child: const TrackingPage(currentStep: 1,),
           );
         },
       ),
