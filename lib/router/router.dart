@@ -6,6 +6,7 @@ import 'package:gifts/screens/auth/signup_page.dart';
 import 'package:gifts/screens/congratulations_page.dart';
 import 'package:gifts/screens/home_page.dart';
 import 'package:gifts/screens/pick_box_page.dart';
+import 'package:gifts/screens/your_rewards_page.dart';
 import 'package:go_router/go_router.dart';
 
 class RouterClass{
@@ -16,7 +17,7 @@ class RouterClass{
       name: RouterNames.login,
       pageBuilder: (context, state) {
           return NoTransitionPage(
-              child: const CongratulationsPage(),
+              child: const YourRewardsPage(),
           );
         },
       ),

@@ -15,7 +15,7 @@ class PickBoxPage extends StatefulWidget {
 class _PickBoxPageState extends State<PickBoxPage> {
   int _countdown = 10;
   late Timer _timer;
-  bool? isFound = false;
+  bool? isFound;
 
   @override
   void initState() {
@@ -45,6 +45,15 @@ class _PickBoxPageState extends State<PickBoxPage> {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
+    Color progressColor;
+    if (_countdown <= 3) {
+      progressColor = colorScheme.primary;
+    } else if (_countdown <= 5) {
+      progressColor = LightThemeAppColors.starColour;
+    } else {
+      progressColor = Colors.greenAccent;
+    }
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -112,7 +121,7 @@ class _PickBoxPageState extends State<PickBoxPage> {
                                   value: isFound == null ? _countdown / 10 : 0,
                                   strokeWidth: 5,
                                   backgroundColor: Colors.grey.shade300,
-                                  color: Colors.greenAccent,
+                                  color: progressColor,
                                 ),
                               ),
                               Text(
