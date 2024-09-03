@@ -3,6 +3,7 @@ import 'package:gifts/screens/Tracking_page.dart';
 import 'package:gifts/screens/address_details.dart';
 import 'package:gifts/screens/auth/login_page.dart';
 import 'package:gifts/screens/auth/signup_page.dart';
+import 'package:gifts/screens/congratulations_page.dart';
 import 'package:gifts/screens/home_page.dart';
 import 'package:gifts/screens/pick_box_page.dart';
 import 'package:go_router/go_router.dart';
@@ -15,7 +16,7 @@ class RouterClass{
       name: RouterNames.login,
       pageBuilder: (context, state) {
           return NoTransitionPage(
-              child: const TrackingPage(currentStep: 1,),
+              child: const CongratulationsPage(),
           );
         },
       ),
