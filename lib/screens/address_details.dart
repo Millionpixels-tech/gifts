@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gifts/common_widgets/input_text_box_widget.dart';
 import 'package:gifts/common_widgets/submit_button_widget.dart';
+import 'package:go_router/go_router.dart';
 
 class AddressDetails extends StatefulWidget {
   const AddressDetails({super.key});
@@ -48,7 +49,7 @@ class _AddressDetailsState extends State<AddressDetails> {
             const SizedBox(height: 8,),
             const InputTextbox(hintText: '076 1234567',),
             const SizedBox(height: 24,),
-            const Center(child: SubmitButtonWidget(buttonHeight: 56, buttonWidth: 181, text: 'Continue', hasIcon: false, buttonIconUrl: ''))
+             Center(child: SubmitButtonWidget(buttonHeight: 56, buttonWidth: 181, text: 'Continue', hasIcon: false, buttonIconUrl: '', onTapFunction: (){context.push('/trackingpage');},))
           ],
         ),
       ),

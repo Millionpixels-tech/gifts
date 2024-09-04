@@ -1,12 +1,17 @@
-import 'dart:async';
 
+import 'dart:async';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gifts/common_widgets/submit_button_widget.dart';
+import 'package:gifts/screens/congratulations_page.dart';
 import 'package:gifts/utils/constants.dart';
+import 'package:go_router/go_router.dart';
 
 class PickBoxPage extends StatefulWidget {
-  const PickBoxPage({super.key});
+  final String itemName;
+  final int currentBox;
+  const PickBoxPage({super.key, required this.itemName, required this.currentBox});
 
   @override
   State<PickBoxPage> createState() => _PickBoxPageState();
@@ -16,11 +21,14 @@ class _PickBoxPageState extends State<PickBoxPage> {
   int _countdown = 10;
   late Timer _timer;
   bool? isFound;
+  int prizeBox = Random().nextInt(2); // Randomize the prize box (0 or 1)
+  
 
   @override
   void initState() {
     super.initState();
     _startCountdown();
+    print(prizeBox);
   }
 
   void _startCountdown() {
@@ -41,11 +49,55 @@ class _PickBoxPageState extends State<PickBoxPage> {
     super.dispose();
   }
 
+  void _onBoxSelected(int boxIndex) {
+    if (boxIndex == prizeBox) {
+      setState(() {
+        isFound = true;
+      });
+    } else {
+      setState(() {
+        isFound = false;
+      });
+    }
+  }
+
+  void _onNextPressed() {
+
+  if (isFound == true) {
+    if (widget.currentBox < 19) {
+      // Navigate to the next set of boxes
+      context.push(
+        '/pickbox',
+        extra: {'itemName': widget.itemName, 'currentBox': widget.currentBox + 2},
+      );
+      
+    } else {
+      // Navigate to the congratulations page
+      context.push('/congratulationspage');
+    }
+  } else {
+    // Restart the game
+    setState(() {
+      _countdown = 10; // Reset countdown
+      isFound = null; // Reset found status
+      prizeBox = Random().nextInt(2); // Randomize the prize box
+    });
+
+    // Navigate to the same page with reset state
+    context.push(
+      '/pickbox',
+      extra: {'itemName': widget.itemName, 'currentBox': 1},
+    );
+  }
+}
+
+
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
     Color progressColor;
+
     if (_countdown <= 3) {
       progressColor = colorScheme.primary;
     } else if (_countdown <= 5) {
@@ -69,47 +121,47 @@ class _PickBoxPageState extends State<PickBoxPage> {
                   child: Column(
                     children: [
                       Center(
-                          child: Text(
-                        isFound == null
-                            ? 'Pick your lucky box'
-                            : isFound!
-                                ? 'You Found it!'
-                                : 'Better Luck Next Time!',
-                        style: textTheme.headlineLarge?.copyWith(
-                            color: colorScheme.onPrimaryFixed,
-                            fontSize: 28,
-                            fontWeight: FontWeight.w600),
-                      )),
-                      const SizedBox(
-                        height: 32,
+                        child: Text(
+                          isFound == null
+                              ? 'Pick your lucky box'
+                              : isFound!
+                                  ? 'You Found it!'
+                                  : 'Better Luck Next Time!',
+                          style: textTheme.headlineLarge?.copyWith(
+                              color: colorScheme.onPrimaryFixed,
+                              fontSize: 28,
+                              fontWeight: FontWeight.w600),
+                        ),
                       ),
+                      const SizedBox(height: 32),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text('You picked sunglasses',
-                              style: textTheme.titleLarge?.copyWith(
-                                color: colorScheme.onPrimaryFixed,
-                              )),
-                          const SizedBox(
-                            width: 12,
+                          Text(
+                            'You picked ${widget.itemName}',
+                            style: textTheme.titleLarge?.copyWith(
+                              color: colorScheme.onPrimaryFixed,
+                            ),
                           ),
+                          const SizedBox(width: 12),
                           Container(
                             height: 26,
                             width: 26,
                             decoration: const BoxDecoration(
-                                color: Colors.black, shape: BoxShape.circle),
-                          )
+                              color: Colors.black,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
                         ],
                       ),
-                      const SizedBox(
-                        height: 90,
-                      ),
+                      const SizedBox(height: 90),
                       Container(
                         height: 130,
                         width: 130,
                         decoration: BoxDecoration(
-                            color: colorScheme.onPrimaryFixed,
-                            shape: BoxShape.circle),
+                          color: colorScheme.onPrimaryFixed,
+                          shape: BoxShape.circle,
+                        ),
                         child: Center(
                           child: Stack(
                             alignment: Alignment.center,
@@ -134,25 +186,27 @@ class _PickBoxPageState extends State<PickBoxPage> {
                           ),
                         ),
                       ),
-                      const SizedBox(
-                        height: 48,
-                      ),
+                      const SizedBox(height: 48),
                       if (isFound == null) ...[
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            SvgPicture.asset(
-                              'assets/icons/gift_icon.svg',
-                              height: 118,
-                              width: 112,
+                            GestureDetector(
+                              onTap: () => _onBoxSelected(0),
+                              child: SvgPicture.asset(
+                                'assets/icons/gift_icon.svg',
+                                height: 118,
+                                width: 112,
+                              ),
                             ),
-                            const SizedBox(
-                              width: 50,
-                            ),
-                            SvgPicture.asset(
-                              'assets/icons/gift_icon.svg',
-                              height: 118,
-                              width: 112,
+                            const SizedBox(width: 50),
+                            GestureDetector(
+                              onTap: () => _onBoxSelected(1),
+                              child: SvgPicture.asset(
+                                'assets/icons/gift_icon.svg',
+                                height: 118,
+                                width: 112,
+                              ),
                             ),
                           ],
                         ),
@@ -169,47 +223,44 @@ class _PickBoxPageState extends State<PickBoxPage> {
                           width: 166,
                         ),
                       ],
-                      const SizedBox(
-                        height: 40,
-                      ),
+                      const SizedBox(height: 40),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
                             'Box',
                             style: textTheme.headlineMedium?.copyWith(
-                                fontSize: 22, fontWeight: FontWeight.w600),
+                              fontSize: 22,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                           Text(
-                            ' 1 ',
+                            ' ${widget.currentBox} ',
                             style: textTheme.headlineMedium?.copyWith(
-                                fontSize: 22,
-                                fontWeight: FontWeight.w600,
-                                color: colorScheme.primary),
+                              fontSize: 22,
+                              fontWeight: FontWeight.w600,
+                              color: colorScheme.primary,
+                            ),
                           ),
                           Text(
                             'of 20',
                             style: textTheme.headlineMedium?.copyWith(
-                                fontSize: 22, fontWeight: FontWeight.w600),
-                          )
+                              fontSize: 22,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                         ],
                       ),
-                      const SizedBox(
-                        height: 12,
-                      ),
+                      const SizedBox(height: 12),
                       Container(
                         height: 100,
                         decoration: BoxDecoration(
                           color: colorScheme.onTertiary,
                         ),
-                        child: const Center(
-                          child: Text('Test Ad'),
-                        ),
+                        child: const Center(child: Text('Test Ad')),
                       ),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      if (isFound == null) ...[
+                      const SizedBox(height: 16),
+                      if (isFound == null)
                         Container(
                           height: 48,
                           width: 133,
@@ -220,54 +271,35 @@ class _PickBoxPageState extends State<PickBoxPage> {
                           child: Center(
                             child: Text(
                               'Next',
-                              style: textTheme.headlineMedium
-                                  ?.copyWith(color: colorScheme.tertiary),
+                              style: textTheme.headlineMedium?.copyWith(
+                                color: colorScheme.tertiary,
+                              ),
                             ),
                           ),
                         )
-                      ] else if (isFound == true) ...[
-                        const SubmitButtonWidget(
-                            buttonHeight: 48,
-                            buttonWidth: 133,
-                            text: 'Next',
-                            hasIcon: false,
-                            buttonIconUrl: ''),
-                      ] else if (isFound == false) ...[
-                        Container(
-                          height: 48,
-                          width: 133,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: LightThemeAppColors.starColour,
-                          ),
-                          child: Center(
-                            child: Text(
-                              'Retry',
-                              style: textTheme.headlineMedium
-                                  ?.copyWith(color: colorScheme.onPrimaryFixed),
-                            ),
-                          ),
-                        )
-                      ],
-                      SizedBox(
-                        height: 16,
-                      ),
+                      else
+                        SubmitButtonWidget(
+                          buttonHeight: 48,
+                          buttonWidth: 133,
+                          text: isFound! ? 'Next' : 'Retry',
+                          hasIcon: false,
+                          buttonIconUrl: '',
+                          onTapFunction: _onNextPressed,
+                        ),
+                      const SizedBox(height: 16),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           // Generate dots
-                          for (int i = 0; i < 19; i++)
+                          for (int i = 0; i < 9; i++)
                             Container(
-                              margin:
-                                  const EdgeInsets.symmetric(horizontal: 4.0),
+                              margin: const EdgeInsets.symmetric(horizontal: 4.0),
                               width: 8.0,
                               height: 8.0,
                               decoration: BoxDecoration(
-                                color: i == 0
-                                    ? colorScheme
-                                        .primary // Fully pink for the first dot
-                                    : colorScheme.primary
-                                        .withOpacity(0.3), // Adjust opacity
+                                color: i == (widget.currentBox ~/ 2)
+                                    ? colorScheme.primary // Fully pink for the current step
+                                    : colorScheme.primary.withOpacity(0.3), // Adjust opacity
                                 shape: BoxShape.circle,
                               ),
                             ),
@@ -276,17 +308,17 @@ class _PickBoxPageState extends State<PickBoxPage> {
                             margin: const EdgeInsets.only(left: 8.0),
                             child: SvgPicture.asset(
                               'assets/icons/gift_small.svg',
-                              height: 40,
-                              width: 40,
+                              height: 16,
+                              width: 16,
                             ),
                           ),
                         ],
                       ),
                     ],
                   ),
-                )
+                ),
               ],
-            )
+            ),
           ],
         ),
       ),

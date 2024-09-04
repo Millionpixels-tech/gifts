@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:gifts/router/router.dart';
 import 'package:gifts/utils/themes.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await _clearSharedPreferences();
   runApp(const MyApp());
 }
 
@@ -17,6 +20,12 @@ class MyApp extends StatelessWidget {
       title: 'Gifts',
       theme: appLightTheme,
       routerConfig: RouterClass().router,
+      
     );
   }
+}
+
+Future<void> _clearSharedPreferences() async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.clear();  // Clear all stored preferences
 }
