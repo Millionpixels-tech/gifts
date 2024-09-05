@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:confetti/confetti.dart';
 import 'package:gifts/utils/constants.dart';
+import 'package:go_router/go_router.dart';
 
 class CongratulationsPage extends StatefulWidget {
   const CongratulationsPage({super.key});
@@ -122,18 +123,23 @@ class _CongratulationsPageState extends State<CongratulationsPage> {
               Spacer(),
               Padding(
                 padding: const EdgeInsets.all(20.0),
-                child: Container(
-                  height: 64,
-                  width: 222,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: LightThemeAppColors.starColour,
-                  ),
-                  child: Center(
-                    child: Text(
-                      'Redeem',
-                      style: textTheme.headlineMedium
-                          ?.copyWith(fontSize: 24, fontWeight: FontWeight.w600),
+                child: InkWell(
+                  onTap: () {
+                    context.push('/addressdetails');
+                  },
+                  child: Container(
+                    height: 64,
+                    width: 222,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: LightThemeAppColors.starColour,
+                    ),
+                    child: Center(
+                      child: Text(
+                        'Redeem',
+                        style: textTheme.headlineMedium
+                            ?.copyWith(fontSize: 24, fontWeight: FontWeight.w600),
+                      ),
                     ),
                   ),
                 ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gifts/common_widgets/submit_button_widget.dart';
+import 'package:go_router/go_router.dart';
 
 class TrackingPage extends StatefulWidget {
   final int currentStep;
@@ -65,7 +66,7 @@ class _TrackingPageState extends State<TrackingPage> {
                     buttonWidth: 220,
                     text: 'Return Home',
                     hasIcon: false,
-                    buttonIconUrl: ''),
+                    buttonIconUrl: '', onTapFunction: (){context.push('/home');},),
               ),
             ],
           ),

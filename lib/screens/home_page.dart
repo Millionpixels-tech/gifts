@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:gifts/screens/pick_box_page.dart';
+import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -8,6 +11,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final TextEditingController _nameController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
@@ -135,20 +139,20 @@ class _HomePageState extends State<HomePage> {
                 item1Name: "Sunglasses",
                 item2Name: "Necklace Set",
                 onTapItem1: () {
-                  _showPopupDialog(context);
+                  _showPopupDialog(context,'Sunglasses');
                 },
                 onTapItem2: () {
-                  _showPopupDialog(context);
+                  _showPopupDialog(context, 'Necklace Set');
                 },
               ),
               ItemContainer(
                   item1Name: "SmartWatch",
                   item2Name: "Ring",
                   onTapItem1: () {
-                    _showPopupDialog(context);
+                    _showPopupDialog(context,'SmartWatch');
                   },
                   onTapItem2: () {
-                    _showPopupDialog(context);
+                    _showPopupDialog(context,'Ring');
                   })
             ],
           ),
@@ -157,7 +161,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void _showPopupDialog(BuildContext context) {
+  void _showPopupDialog(BuildContext context, String itemName) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -194,6 +198,7 @@ class _HomePageState extends State<HomePage> {
                     borderRadius: BorderRadius.circular(12)
                   ),
                   child: TextField(
+                    controller: _nameController,
                     cursorColor: colorScheme.onPrimary,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
@@ -206,7 +211,29 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
-                )
+                ),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () async {
+                    String name = _nameController.text.trim();
+                    if (name.isNotEmpty) {
+                      await _saveNameToSharedPreferences(name);
+                      Navigator.of(context).pop();
+                     context.push(
+                          '/pickbox',
+                          extra: {
+                            'itemName': itemName,
+                            'currentBox': 2,
+                          },
+                        );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Please enter a name.')),
+                      );
+                    }
+                  },
+                  child: Text('Continue'),
+                ),
               ],
             ),
           ),
@@ -215,6 +242,10 @@ class _HomePageState extends State<HomePage> {
       barrierDismissible:
           true, // Allow dismissing by tapping outside the dialog
     );
+  }
+Future<void> _saveNameToSharedPreferences(String name) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('userName', name);
   }
 }
 
