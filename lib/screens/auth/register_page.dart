@@ -5,22 +5,87 @@ import 'package:gifts/common_widgets/input_text_box_widget.dart';
 import 'package:gifts/common_widgets/submit_button_widget.dart';
 import 'package:go_router/go_router.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPassword = TextEditingController();
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPassword.dispose();
     super.dispose();
+  }
+
+  String? validateEmail(String email) {
+    final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+    if (email.isEmpty) {
+      return 'Email cannot be empty';
+    } else if (!emailRegex.hasMatch(email)) {
+      return 'Please enter a valid email';
+    }
+    return null;
+  }
+
+  String? validatePassword(String password) {
+    if (password.isEmpty) {
+      return 'Password cannot be empty';
+    } else if (password.length < 6) {
+      return 'Password must be at least 6 characters long';
+    }
+    return null;
+  }
+
+  String? validateConfirmPassword(String password, String confirmPassword) {
+    if (confirmPassword.isEmpty) {
+      return 'Please confirm your password';
+    } else if (password != confirmPassword) {
+      return 'Passwords do not match';
+    }
+    return null;
+  }
+
+  void validateAndSubmit() {
+    final emailError = validateEmail(_emailController.text);
+    if (emailError != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(emailError)),
+      );
+      return;
+    }
+
+    final passwordError = validatePassword(_passwordController.text);
+    if (passwordError != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(passwordError)),
+      );
+      return;
+    }
+
+    final confirmPasswordError = validateConfirmPassword(
+        _passwordController.text, _confirmPassword.text);
+    if (confirmPasswordError != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(confirmPasswordError)),
+      );
+      return;
+    }
+
+    // If all validations pass, trigger the registration event
+    BlocProvider.of<AuthBloc>(context).add(
+      RegisterEvent(
+        _emailController.text,
+        _passwordController.text,
+      ),
+    );
   }
 
   @override
@@ -29,8 +94,10 @@ class _LoginPageState extends State<LoginPage> {
     final colorScheme = Theme.of(context).colorScheme;
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
-        if (state is SuccessLoginState) {
-          GoRouter.of(context).pushNamed('home');
+        if (state is SuccessRegisterState) {
+          GoRouter.of(context).pushNamed(
+            'home'
+          );
         } else if (state is AuthErrorState) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(state.message)),
@@ -47,7 +114,7 @@ class _LoginPageState extends State<LoginPage> {
                     clipper: TopCircleClipper(),
                     child: Container(
                       height: 200,
-                      color: colorScheme.primary,
+                      color: Colors.pink,
                     ),
                   ),
                   Padding(
@@ -68,14 +135,14 @@ class _LoginPageState extends State<LoginPage> {
                           height: 115,
                         ),
                         Text(
-                          'Log in to your account',
+                          'Create an account',
                           style: textTheme.headlineLarge,
                         ),
                         SizedBox(
                           height: 28,
                         ),
                         Text(
-                          'Log in to your account to receive your price',
+                          'Create an account to receive your price',
                           style: textTheme.titleMedium,
                         ),
                         SizedBox(
@@ -94,7 +161,15 @@ class _LoginPageState extends State<LoginPage> {
                           controller: _passwordController,
                         ),
                         SizedBox(
-                          height: 120,
+                          height: 16,
+                        ),
+                        InputTextbox(
+                          hintText: 'Confirm Password',
+                          isPassword: true,
+                          controller: _confirmPassword,
+                        ),
+                        SizedBox(
+                          height: 48,
                         ),
                         Center(
                             child: SubmitButtonWidget(
@@ -103,14 +178,7 @@ class _LoginPageState extends State<LoginPage> {
                           text: "Continue",
                           hasIcon: false,
                           buttonIconUrl: '',
-                          onTapFunction: () {
-                            BlocProvider.of<AuthBloc>(context).add(
-                              LoginEvent(
-                                _emailController.text,
-                                _passwordController.text,
-                              ),
-                            );
-                          },
+                          onTapFunction: validateAndSubmit,
                         )),
                         SizedBox(
                           height: 48,
@@ -119,18 +187,18 @@ class _LoginPageState extends State<LoginPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             InkWell(
-                              onTap: (){
-                                GoRouter.of(context).pushNamed('register');
+                              onTap: () {
+                                GoRouter.of(context).pushNamed('login');
                               },
                               child: Text(
-                                'Sign up',
+                                'Log in',
                                 style: textTheme.titleLarge?.copyWith(
                                     color: colorScheme.primary,
                                     decoration: TextDecoration.underline),
                               ),
                             ),
                             Text(
-                              ", if you don't have an account",
+                              ', if you already have an account',
                               style: textTheme.titleLarge,
                             )
                           ],
