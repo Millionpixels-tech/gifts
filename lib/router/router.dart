@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:gifts/blocs/auth/auth_bloc.dart';
+import 'package:gifts/blocs/product/product_bloc.dart';
 import 'package:gifts/router/router_names.dart';
 import 'package:gifts/screens/Tracking_page.dart';
 import 'package:gifts/screens/address_details.dart';
@@ -48,9 +49,16 @@ class RouterClass {
           name: RouterNames.home,
           pageBuilder: (context, state) {
             return NoTransitionPage(
-              child: BlocProvider(
-                create: (context) => AuthBloc(),
-                child: const AddressDetails(),
+              child: MultiBlocProvider(
+                providers: [
+                  BlocProvider(
+                    create: (context) => AuthBloc(),
+                  ),
+                  BlocProvider(
+                    create: (context) => ProductBloc(),
+                  ),
+                ],
+                child: const HomePage(),
               ),
             );
           },
