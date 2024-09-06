@@ -103,8 +103,12 @@ class RouterClass {
           path: "/congratulationspage",
           name: RouterNames.congratulationspage,
           pageBuilder: (context, state) {
+            final extra =
+                state.extra as Map<String, dynamic>?; // Use nullable type
+            final itemImageUrl = extra?['itemImageUrl'] as String? ??
+                'Default Item';
             return NoTransitionPage(
-              child: const CongratulationsPage(),
+              child: CongratulationsPage(itemImageUrl: itemImageUrl,),
             );
           },
         ),
@@ -116,12 +120,15 @@ class RouterClass {
                 state.extra as Map<String, dynamic>?; // Use nullable type
             final itemName = extra?['itemName'] as String? ??
                 'Default Item'; // Provide default values if null
+                final itemImageUrl = extra?['itemImageUrl'] as String? ??
+                ' ';
             final currentBox = extra?['currentBox'] as int? ??
                 1; // Provide default values if null
             return NoTransitionPage(
               child: PickBoxPage(
                 itemName: itemName,
                 currentBox: currentBox,
+                itemImageUrl: itemImageUrl,
               ),
             );
           },

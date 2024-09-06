@@ -138,5 +138,30 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         }
       },
     );
+
+    on<UpdateNameEvent>(
+      (event, emit) async {
+        final ApiClient apiClient = ApiClient();
+        try {
+          final response = await apiClient.put("/user/update",
+          {
+            "name": event.name,
+          });
+          
+          var statusCode = response.statusCode;
+          print(statusCode);
+          if (statusCode == 401) {
+            //Should dipslay error message to user
+            emit(AuthErrorState("Invalid data provided"));
+        
+          } else if (statusCode == 200) {
+            emit(SuccessNameUpdateState());
+          }
+        } catch (error) {
+          emit(AuthErrorState(error.toString()));
+          print(' error is $error');
+        }
+      },
+    );
   }
 }
