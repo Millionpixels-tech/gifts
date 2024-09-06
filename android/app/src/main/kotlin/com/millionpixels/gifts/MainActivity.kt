@@ -1,4 +1,4 @@
-package com.example.gifts
+package com.millionpixels.gifts
 
 import io.flutter.embedding.android.FlutterActivity
 
