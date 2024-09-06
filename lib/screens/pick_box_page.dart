@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
@@ -11,7 +10,12 @@ import 'package:go_router/go_router.dart';
 class PickBoxPage extends StatefulWidget {
   final String itemName;
   final int currentBox;
-  const PickBoxPage({super.key, required this.itemName, required this.currentBox});
+  final String itemImageUrl;
+  const PickBoxPage(
+      {super.key,
+      required this.itemName,
+      required this.currentBox,
+      required this.itemImageUrl});
 
   @override
   State<PickBoxPage> createState() => _PickBoxPageState();
@@ -22,7 +26,6 @@ class _PickBoxPageState extends State<PickBoxPage> {
   late Timer _timer;
   bool? isFound;
   int prizeBox = Random().nextInt(2); // Randomize the prize box (0 or 1)
-  
 
   @override
   void initState() {
@@ -62,35 +65,39 @@ class _PickBoxPageState extends State<PickBoxPage> {
   }
 
   void _onNextPressed() {
+    if (isFound == true) {
+      if (widget.currentBox < 19) {
+        // Navigate to the next set of boxes
+        context.push(
+          '/pickbox',
+          extra: {
+            'itemName': widget.itemName,
+            'currentBox': widget.currentBox + 2,
+            'itemImageUrl': widget.itemImageUrl
+          },
+        );
+      } else {
+        // Navigate to the congratulations page
+        context.push('/congratulationspage',extra: {
+                        
+                          'itemImageUrl': widget.itemImageUrl,
+                        },);
+      }
+    } else {
+      // Restart the game
+      setState(() {
+        _countdown = 10; // Reset countdown
+        isFound = null; // Reset found status
+        prizeBox = Random().nextInt(2); // Randomize the prize box
+      });
 
-  if (isFound == true) {
-    if (widget.currentBox < 19) {
-      // Navigate to the next set of boxes
+      // Navigate to the same page with reset state
       context.push(
         '/pickbox',
-        extra: {'itemName': widget.itemName, 'currentBox': widget.currentBox + 2},
+        extra: {'itemName': widget.itemName, 'currentBox': 1, 'itemImageUrl': widget.itemImageUrl},
       );
-      
-    } else {
-      // Navigate to the congratulations page
-      context.push('/congratulationspage');
     }
-  } else {
-    // Restart the game
-    setState(() {
-      _countdown = 10; // Reset countdown
-      isFound = null; // Reset found status
-      prizeBox = Random().nextInt(2); // Randomize the prize box
-    });
-
-    // Navigate to the same page with reset state
-    context.push(
-      '/pickbox',
-      extra: {'itemName': widget.itemName, 'currentBox': 1},
-    );
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -150,6 +157,14 @@ class _PickBoxPageState extends State<PickBoxPage> {
                             decoration: const BoxDecoration(
                               color: Colors.black,
                               shape: BoxShape.circle,
+                            ),
+                            child: ClipOval(
+                              child: Image.network(
+                                widget.itemImageUrl,
+                                fit: BoxFit.cover,
+                                width: double.infinity,
+                                height: double.infinity,
+                              ),
                             ),
                           ),
                         ],
@@ -293,13 +308,16 @@ class _PickBoxPageState extends State<PickBoxPage> {
                           // Generate dots
                           for (int i = 0; i < 9; i++)
                             Container(
-                              margin: const EdgeInsets.symmetric(horizontal: 4.0),
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 4.0),
                               width: 8.0,
                               height: 8.0,
                               decoration: BoxDecoration(
                                 color: i == (widget.currentBox ~/ 2)
-                                    ? colorScheme.primary // Fully pink for the current step
-                                    : colorScheme.primary.withOpacity(0.3), // Adjust opacity
+                                    ? colorScheme
+                                        .primary // Fully pink for the current step
+                                    : colorScheme.primary
+                                        .withOpacity(0.3), // Adjust opacity
                                 shape: BoxShape.circle,
                               ),
                             ),

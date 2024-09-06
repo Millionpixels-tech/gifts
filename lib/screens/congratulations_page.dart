@@ -4,7 +4,8 @@ import 'package:gifts/utils/constants.dart';
 import 'package:go_router/go_router.dart';
 
 class CongratulationsPage extends StatefulWidget {
-  const CongratulationsPage({super.key});
+  final String itemImageUrl;
+  const CongratulationsPage({super.key, required this.itemImageUrl});
 
   @override
   State<CongratulationsPage> createState() => _CongratulationsPageState();
@@ -113,6 +114,13 @@ class _CongratulationsPageState extends State<CongratulationsPage> {
                             border:
                                 Border.all(width: 3, color: Color(0xFFFFD233)),
                           ),
+                          child: Image.network(
+                          widget.itemImageUrl,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                          height: double.infinity,
+                          
+                        ),
                         ),
                         //SizedBox(height: 209,),
                       ],

@@ -18,3 +18,5 @@ class SuccessLogoutState extends AuthState {}
 class SuccessRegisterState extends AuthState{}
 
 class SuccessAddressUpdateState extends AuthState{}
+
+class SuccessNameUpdateState extends AuthState{}

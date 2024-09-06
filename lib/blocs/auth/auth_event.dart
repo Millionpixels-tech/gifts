@@ -35,4 +35,10 @@ class UpdateAddressEvent extends AuthEvent {
       this.district, this.postalCode, this.contactNumber);
 }
 
+class UpdateNameEvent extends AuthEvent {
+  final String name;
+
+  UpdateNameEvent(this.name);
+}
+
 class LogoutEvent extends AuthEvent {}

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gifts/blocs/auth/auth_bloc.dart';
 import 'package:gifts/blocs/product/product_bloc.dart';
 import 'package:gifts/screens/pick_box_page.dart';
 import 'package:go_router/go_router.dart';
@@ -159,7 +160,7 @@ class _HomePageState extends State<HomePage> {
                             item1Name: products[i]['product_name'],
                             item1ImageUrl: products[i]['product_pic_url'],
                             onTapItem1: () => _showPopupDialog(
-                                context, products[i]['product_name']),
+                                context, products[i]['product_name'], products[i]['product_pic_url']),
                             item2Name: (i + 1 < products.length)
                                 ? products[i + 1]['product_name']
                                 : '',
@@ -168,7 +169,7 @@ class _HomePageState extends State<HomePage> {
                                 : '',
                             onTapItem2: (i + 1 < products.length)
                                 ? () => _showPopupDialog(
-                                    context, products[i + 1]['product_name'])
+                                    context, products[i + 1]['product_name'], products[i + 1]['product_pic_url'])
                                 : null,
                           ),
                       ],
@@ -187,9 +188,9 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void _showPopupDialog(BuildContext context, String itemName) {
+  void _showPopupDialog(BuildContext parentContext, String itemName, String itemImageUrl) {
     showDialog(
-      context: context,
+      context: parentContext,
       builder: (BuildContext context) {
         final textTheme = Theme.of(context).textTheme;
         final colorScheme = Theme.of(context).colorScheme;
@@ -241,14 +242,21 @@ class _HomePageState extends State<HomePage> {
                 ElevatedButton(
                   onPressed: () async {
                     String name = _nameController.text.trim();
+
                     if (name.isNotEmpty) {
-                      await _saveNameToSharedPreferences(name);
+                      
+                      BlocProvider.of<AuthBloc>(parentContext).add(
+                        UpdateNameEvent(
+                          name,
+                        ),
+                      );
                       Navigator.of(context).pop();
                       context.push(
                         '/pickbox',
                         extra: {
                           'itemName': itemName,
                           'currentBox': 2,
+                          'itemImageUrl': itemImageUrl,
                         },
                       );
                     } else {
@@ -395,18 +403,18 @@ class ItemContainer extends StatelessWidget {
                           ),
                         ),
                         Positioned.fill(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [Colors.transparent, Colors.black54],
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              stops: [0.7, 1.0],
+                          child: Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [Colors.transparent, Colors.black54],
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                stops: [0.7, 1.0],
+                              ),
+                              borderRadius: BorderRadius.circular(28),
                             ),
-                            borderRadius: BorderRadius.circular(28),
                           ),
                         ),
-                      ),
                         Align(
                           alignment: Alignment.bottomCenter,
                           child: Padding(
