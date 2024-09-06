@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gifts/blocs/product/product_bloc.dart';
 import 'package:gifts/screens/pick_box_page.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,6 +14,14 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final TextEditingController _nameController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    // Trigger the FetchProductsEvent when the page initializes
+    context.read<ProductBloc>().add(GetProductsEvent());
+  }
+
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
@@ -135,25 +145,41 @@ class _HomePageState extends State<HomePage> {
               SizedBox(
                 height: 22,
               ),
-              ItemContainer(
-                item1Name: "Sunglasses",
-                item2Name: "Necklace Set",
-                onTapItem1: () {
-                  _showPopupDialog(context,'Sunglasses');
-                },
-                onTapItem2: () {
-                  _showPopupDialog(context, 'Necklace Set');
+              BlocBuilder<ProductBloc, ProductState>(
+                builder: (context, state) {
+                  if (state is ProductInitial) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (state is SuccessProductRetrievalState) {
+                    // Assuming products are loaded correctly, display them in ItemContainer
+                    final products = state.products;
+                    return Column(
+                      children: [
+                        for (int i = 0; i < products.length; i += 2)
+                          ItemContainer(
+                            item1Name: products[i]['product_name'],
+                            item1ImageUrl: products[i]['product_pic_url'],
+                            onTapItem1: () => _showPopupDialog(
+                                context, products[i]['product_name']),
+                            item2Name: (i + 1 < products.length)
+                                ? products[i + 1]['product_name']
+                                : '',
+                            item2ImageUrl: (i + 1 < products.length)
+                                ? products[i + 1]['product_pic_url']
+                                : '',
+                            onTapItem2: (i + 1 < products.length)
+                                ? () => _showPopupDialog(
+                                    context, products[i + 1]['product_name'])
+                                : null,
+                          ),
+                      ],
+                    );
+                  } else if (state is ErrorProductState) {
+                    return Center(child: Text('unable to fetch products'));
+                  } else {
+                    return Center(child: Text('Unknown state'));
+                  }
                 },
               ),
-              ItemContainer(
-                  item1Name: "SmartWatch",
-                  item2Name: "Ring",
-                  onTapItem1: () {
-                    _showPopupDialog(context,'SmartWatch');
-                  },
-                  onTapItem2: () {
-                    _showPopupDialog(context,'Ring');
-                  })
             ],
           ),
         ),
@@ -194,9 +220,8 @@ class _HomePageState extends State<HomePage> {
                 Container(
                   height: 48,
                   decoration: BoxDecoration(
-                    color: colorScheme.onTertiary,
-                    borderRadius: BorderRadius.circular(12)
-                  ),
+                      color: colorScheme.onTertiary,
+                      borderRadius: BorderRadius.circular(12)),
                   child: TextField(
                     controller: _nameController,
                     cursorColor: colorScheme.onPrimary,
@@ -219,13 +244,13 @@ class _HomePageState extends State<HomePage> {
                     if (name.isNotEmpty) {
                       await _saveNameToSharedPreferences(name);
                       Navigator.of(context).pop();
-                     context.push(
-                          '/pickbox',
-                          extra: {
-                            'itemName': itemName,
-                            'currentBox': 2,
-                          },
-                        );
+                      context.push(
+                        '/pickbox',
+                        extra: {
+                          'itemName': itemName,
+                          'currentBox': 2,
+                        },
+                      );
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text('Please enter a name.')),
@@ -243,7 +268,8 @@ class _HomePageState extends State<HomePage> {
           true, // Allow dismissing by tapping outside the dialog
     );
   }
-Future<void> _saveNameToSharedPreferences(String name) async {
+
+  Future<void> _saveNameToSharedPreferences(String name) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('userName', name);
   }
@@ -270,23 +296,27 @@ class TopRightCutOutClipper extends CustomClipper<Path> {
 
 class ItemContainer extends StatelessWidget {
   final String item1Name;
-  //final String item1ImageUrl
+  final String item1ImageUrl;
   final String item2Name;
-  //final String item2ImageUrl
+  final String item2ImageUrl;
   final VoidCallback onTapItem1;
-  final VoidCallback onTapItem2;
+  final VoidCallback? onTapItem2;
+
   const ItemContainer({
     super.key,
     required this.item1Name,
+    required this.item1ImageUrl,
     required this.item2Name,
+    required this.item2ImageUrl,
     required this.onTapItem1,
-    required this.onTapItem2,
+    this.onTapItem2,
   });
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
+
     return Column(
       children: [
         Row(
@@ -300,51 +330,104 @@ class ItemContainer extends StatelessWidget {
                     borderRadius: BorderRadius.circular(28),
                     color: Colors.black,
                   ),
-                  child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 9.0),
-                        child: Text(
-                          item1Name,
-                          style: textTheme.titleSmall?.copyWith(
-                              color: colorScheme.onPrimaryFixed,
-                              fontWeight: FontWeight.w600),
+                  child: Stack(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(28),
+                        child: Image.network(
+                          item1ImageUrl,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                          height: double.infinity,
                         ),
-                      )),
-                ),
-              ),
-            ),
-            SizedBox(
-              width: 16,
-            ),
-            Expanded(
-              child: InkWell(
-                onTap: onTapItem2,
-                child: Container(
-                  height: 200,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(28),
-                    color: Colors.black,
+                      ),
+                      Positioned.fill(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [Colors.transparent, Colors.black54],
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              stops: [0.7, 1.0],
+                            ),
+                            borderRadius: BorderRadius.circular(28),
+                          ),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 9.0),
+                          child: Text(
+                            item1Name,
+                            style: textTheme.titleSmall?.copyWith(
+                              color: colorScheme.onPrimaryFixed,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 9.0),
-                        child: Text(
-                          item2Name,
-                          style: textTheme.titleSmall?.copyWith(
-                              color: colorScheme.onPrimaryFixed,
-                              fontWeight: FontWeight.w600),
-                        ),
-                      )),
                 ),
               ),
             ),
+            SizedBox(width: 16),
+            if (item2Name.isNotEmpty && onTapItem2 != null)
+              Expanded(
+                child: InkWell(
+                  onTap: onTapItem2,
+                  child: Container(
+                    height: 200,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(28),
+                      color: Colors.black,
+                    ),
+                    child: Stack(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(28),
+                          child: Image.network(
+                            item2ImageUrl,
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            height: double.infinity,
+                          ),
+                        ),
+                        Positioned.fill(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [Colors.transparent, Colors.black54],
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              stops: [0.7, 1.0],
+                            ),
+                            borderRadius: BorderRadius.circular(28),
+                          ),
+                        ),
+                      ),
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 9.0),
+                            child: Text(
+                              item2Name,
+                              style: textTheme.titleSmall?.copyWith(
+                                color: colorScheme.onPrimaryFixed,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
           ],
         ),
-        SizedBox(
-          height: 16,
-        )
+        SizedBox(height: 16),
       ],
     );
   }
