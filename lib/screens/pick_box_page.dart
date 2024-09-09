@@ -26,6 +26,7 @@ class _PickBoxPageState extends State<PickBoxPage> {
   late Timer _timer;
   bool? isFound;
   int prizeBox = Random().nextInt(2); // Randomize the prize box (0 or 1)
+  bool isTimerFinished = false; // To track if the timer has finished
 
   @override
   void initState() {
@@ -42,6 +43,9 @@ class _PickBoxPageState extends State<PickBoxPage> {
         });
       } else {
         _timer.cancel();
+        setState(() {
+          isTimerFinished = true; // Mark timer as finished
+        });
       }
     });
   }
@@ -65,6 +69,7 @@ class _PickBoxPageState extends State<PickBoxPage> {
   }
 
   void _onNextPressed() {
+    if (!isTimerFinished) return; // Disable button if timer not finished
     if (isFound == true) {
       if (widget.currentBox < 19) {
         // Navigate to the next set of boxes
@@ -78,10 +83,9 @@ class _PickBoxPageState extends State<PickBoxPage> {
         );
       } else {
         // Navigate to the congratulations page
-        context.push('/congratulationspage',extra: {
-                        
-                          'itemImageUrl': widget.itemImageUrl,
-                        },);
+        context.push('/congratulationspage', extra: {
+          'itemImageUrl': widget.itemImageUrl,
+        });
       }
     } else {
       // Restart the game
@@ -89,12 +93,17 @@ class _PickBoxPageState extends State<PickBoxPage> {
         _countdown = 10; // Reset countdown
         isFound = null; // Reset found status
         prizeBox = Random().nextInt(2); // Randomize the prize box
+        isTimerFinished = false; // Reset timer finished status
       });
 
       // Navigate to the same page with reset state
       context.push(
         '/pickbox',
-        extra: {'itemName': widget.itemName, 'currentBox': 1, 'itemImageUrl': widget.itemImageUrl},
+        extra: {
+          'itemName': widget.itemName,
+          'currentBox': 2,
+          'itemImageUrl': widget.itemImageUrl
+        },
       );
     }
   }
@@ -185,14 +194,14 @@ class _PickBoxPageState extends State<PickBoxPage> {
                                 height: 76,
                                 width: 76,
                                 child: CircularProgressIndicator(
-                                  value: isFound == null ? _countdown / 10 : 0,
+                                  value: _countdown / 10,
                                   strokeWidth: 5,
                                   backgroundColor: Colors.grey.shade300,
                                   color: progressColor,
                                 ),
                               ),
                               Text(
-                                isFound == null ? '$_countdown' : '00',
+                                '$_countdown',
                                 style: textTheme.headlineLarge?.copyWith(
                                   fontWeight: FontWeight.w700,
                                 ),
@@ -226,10 +235,34 @@ class _PickBoxPageState extends State<PickBoxPage> {
                           ],
                         ),
                       ] else if (isFound == true) ...[
-                        SvgPicture.asset(
-                          'assets/icons/found_box.svg',
-                          height: 184,
-                          width: 166,
+                        Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            SvgPicture.asset(
+                              'assets/icons/found_box.svg',
+                              height: 184,
+                              width: 166,
+                            ),
+                            Positioned(
+                              top: -4,
+                              left: -4,
+                              child: Container(
+                              width: 87,
+                              height: 87,
+                              decoration: BoxDecoration(
+                                color: Colors.black,
+                                shape: BoxShape.circle,
+                              ),
+                              child: ClipOval(
+                              child: Image.network(
+                                widget.itemImageUrl,
+                                fit: BoxFit.cover,
+                                width: double.infinity,
+                                height: double.infinity,
+                              ),
+                            ),
+                            ))
+                          ],
                         ),
                       ] else if (isFound == false) ...[
                         SvgPicture.asset(
@@ -296,16 +329,20 @@ class _PickBoxPageState extends State<PickBoxPage> {
                         SubmitButtonWidget(
                           buttonHeight: 48,
                           buttonWidth: 133,
-                          text: isFound! ? 'Next' : 'Retry',
+                          text: isTimerFinished
+                              ? (isFound! ? 'Next' : 'Retry')
+                              : (isFound! ? 'Next' : 'Retry'),
                           hasIcon: false,
                           buttonIconUrl: '',
-                          onTapFunction: _onNextPressed,
+                          onTapFunction:
+                              isTimerFinished ? _onNextPressed : null,
+                          buttonColor:
+                              isTimerFinished ? null : colorScheme.onTertiary,
                         ),
                       const SizedBox(height: 16),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          // Generate dots
                           for (int i = 0; i < 9; i++)
                             Container(
                               margin:
@@ -313,15 +350,12 @@ class _PickBoxPageState extends State<PickBoxPage> {
                               width: 8.0,
                               height: 8.0,
                               decoration: BoxDecoration(
-                                color: i == (widget.currentBox ~/ 2)
-                                    ? colorScheme
-                                        .primary // Fully pink for the current step
-                                    : colorScheme.primary
-                                        .withOpacity(0.3), // Adjust opacity
+                                color: i == (widget.currentBox ~/ 2 - 1)
+                                    ? colorScheme.primary
+                                    : colorScheme.primary.withOpacity(0.3),
                                 shape: BoxShape.circle,
                               ),
                             ),
-                          // Add gift icon at the end
                           Container(
                             margin: const EdgeInsets.only(left: 8.0),
                             child: SvgPicture.asset(

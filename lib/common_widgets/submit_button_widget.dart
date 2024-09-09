@@ -8,6 +8,7 @@ class SubmitButtonWidget extends StatelessWidget {
   final bool hasIcon;
   final String buttonIconUrl;
   final Function? onTapFunction;
+  final Color? buttonColor;
 
   const SubmitButtonWidget({
     super.key,
@@ -16,7 +17,7 @@ class SubmitButtonWidget extends StatelessWidget {
     required this.text,
     required this.hasIcon,
     required this.buttonIconUrl,
-    this.onTapFunction,
+    this.onTapFunction, this.buttonColor,
   });
 
   @override
@@ -31,7 +32,7 @@ class SubmitButtonWidget extends StatelessWidget {
         width: buttonWidth,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24),
-          color: colorTheme.primary,
+          color: buttonColor ?? colorTheme.primary,
         ),
         child: Center(
           child: hasIcon

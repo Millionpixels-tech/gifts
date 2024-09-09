@@ -27,22 +27,6 @@ class RouterClass {
           ),
         );
       },
-      redirect: (context, state) async {
-        const FlutterSecureStorage secureStorage = FlutterSecureStorage();
-        String? accessToken = await secureStorage.read(key: 'accessToken');
-        String? refreshToken = await secureStorage.read(key: 'refreshToken');
-        if (accessToken == null ||
-            refreshToken == null ||
-            JwtDecoder.isExpired(refreshToken)) {
-          if (state.uri.toString() == '/register') {
-            return "/register";
-          }
-          return "/login";
-        }
-        return null;
-        //Not suyre we should return null or not. It works without return null
-        //return null;
-      },
       routes: [
         GoRoute(
           path: "/home",

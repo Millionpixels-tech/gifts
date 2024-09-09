@@ -24,6 +24,7 @@ class LoginEvent extends AuthEvent {
 }
 
 class UpdateAddressEvent extends AuthEvent {
+  final String userName;
   final String adressLine1;
   final String adressLine2;
   final String city;
@@ -32,7 +33,7 @@ class UpdateAddressEvent extends AuthEvent {
   final String contactNumber;
 
   UpdateAddressEvent(this.adressLine1, this.adressLine2, this.city,
-      this.district, this.postalCode, this.contactNumber);
+      this.district, this.postalCode, this.contactNumber, this.userName);
 }
 
 class UpdateNameEvent extends AuthEvent {
