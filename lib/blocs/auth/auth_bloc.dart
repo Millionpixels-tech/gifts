@@ -121,6 +121,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             "district": event.district,
             "postal_code": event.postalCode,
             "contact_number": event.contactNumber,
+            "name": event.userName,
           });
           
           var statusCode = response.statusCode;

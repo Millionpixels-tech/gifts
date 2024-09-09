@@ -30,7 +30,7 @@ class _LoginPageState extends State<LoginPage> {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is SuccessLoginState) {
-          GoRouter.of(context).pushNamed('home');
+          GoRouter.of(context).pushNamed('addressdetails');
         } else if (state is AuthErrorState) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(state.message)),

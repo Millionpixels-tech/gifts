@@ -96,7 +96,7 @@ class _RegisterPageState extends State<RegisterPage> {
       listener: (context, state) {
         if (state is SuccessRegisterState) {
           GoRouter.of(context).pushNamed(
-            'home'
+            'addressdetails'
           );
         } else if (state is AuthErrorState) {
           ScaffoldMessenger.of(context).showSnackBar(

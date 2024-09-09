@@ -133,7 +133,7 @@ class _CongratulationsPageState extends State<CongratulationsPage> {
                 padding: const EdgeInsets.all(20.0),
                 child: InkWell(
                   onTap: () {
-                    context.push('/addressdetails');
+                    context.push('/login');
                   },
                   child: Container(
                     height: 64,

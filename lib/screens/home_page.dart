@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:gifts/blocs/auth/auth_bloc.dart';
 import 'package:gifts/blocs/product/product_bloc.dart';
 import 'package:gifts/screens/pick_box_page.dart';
@@ -15,6 +16,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final TextEditingController _nameController = TextEditingController();
+  final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
 
   @override
   void initState() {
@@ -160,7 +162,9 @@ class _HomePageState extends State<HomePage> {
                             item1Name: products[i]['product_name'],
                             item1ImageUrl: products[i]['product_pic_url'],
                             onTapItem1: () => _showPopupDialog(
-                                context, products[i]['product_name'], products[i]['product_pic_url']),
+                                context,
+                                products[i]['product_name'],
+                                products[i]['product_pic_url']),
                             item2Name: (i + 1 < products.length)
                                 ? products[i + 1]['product_name']
                                 : '',
@@ -169,7 +173,9 @@ class _HomePageState extends State<HomePage> {
                                 : '',
                             onTapItem2: (i + 1 < products.length)
                                 ? () => _showPopupDialog(
-                                    context, products[i + 1]['product_name'], products[i + 1]['product_pic_url'])
+                                    context,
+                                    products[i + 1]['product_name'],
+                                    products[i + 1]['product_pic_url'])
                                 : null,
                           ),
                       ],
@@ -188,7 +194,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void _showPopupDialog(BuildContext parentContext, String itemName, String itemImageUrl) {
+  void _showPopupDialog(
+      BuildContext parentContext, String itemName, String itemImageUrl) {
     showDialog(
       context: parentContext,
       builder: (BuildContext context) {
@@ -244,12 +251,12 @@ class _HomePageState extends State<HomePage> {
                     String name = _nameController.text.trim();
 
                     if (name.isNotEmpty) {
-                      
-                      BlocProvider.of<AuthBloc>(parentContext).add(
-                        UpdateNameEvent(
-                          name,
-                        ),
-                      );
+                      await _saveNameToSecureStorage(name);
+                      // BlocProvider.of<AuthBloc>(parentContext).add(
+                      //   UpdateNameEvent(
+                      //     name,
+                      //   ),
+                      // );
                       Navigator.of(context).pop();
                       context.push(
                         '/pickbox',
@@ -277,9 +284,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future<void> _saveNameToSharedPreferences(String name) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('userName', name);
+  Future<void> _saveNameToSecureStorage(String name) async {
+    await _secureStorage.write(key: 'userName', value: name);
   }
 }
 

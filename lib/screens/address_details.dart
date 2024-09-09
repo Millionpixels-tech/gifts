@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:gifts/blocs/auth/auth_bloc.dart';
 import 'package:gifts/common_widgets/input_text_box_widget.dart';
 import 'package:gifts/common_widgets/submit_button_widget.dart';
@@ -19,6 +20,21 @@ class _AddressDetailsState extends State<AddressDetails> {
   final TextEditingController districtController = TextEditingController();
   final TextEditingController postalCodeController = TextEditingController();
   final TextEditingController contactNumberController = TextEditingController();
+  String? _userName; // To store the fetched user name
+  
+  final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserName(); // Fetch user name at initialization
+  }
+
+  // Fetch user name from secure storage
+  Future<void> _fetchUserName() async {
+    _userName = await _secureStorage.read(key: 'userName');
+    setState(() {}); // Update the state to reflect the fetched name
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -150,6 +166,7 @@ class _AddressDetailsState extends State<AddressDetails> {
                   hasIcon: false,
                   buttonIconUrl: '',
                   onTapFunction: () {
+                    final userName = _userName ?? '';
                     BlocProvider.of<AuthBloc>(context).add(
                       UpdateAddressEvent(
                         addressLine1Controller.text,
@@ -157,7 +174,8 @@ class _AddressDetailsState extends State<AddressDetails> {
                         cityController.text,
                         districtController.text,
                         postalCodeController.text,
-                        contactNumberController.text
+                        contactNumberController.text,
+                        userName,
                       ),
                     );
                     
