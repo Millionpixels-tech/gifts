@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "489835318094",
+    "firebase_url": "https://boxes-8c013-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "boxes-8c013",
+    "storage_bucket": "boxes-8c013.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:489835318094:android:d63fec2b9ecda67fb7ac1f",
+        "android_client_info": {
+          "package_name": "com.millionpixels.gifts"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyABI06ncld7MNh8ji552_lKmexw1ugdY5s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

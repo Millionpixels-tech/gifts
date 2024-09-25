@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:gifts/blocs/auth/auth_bloc.dart';
 import 'package:gifts/blocs/product/product_bloc.dart';
 import 'package:gifts/router/router_names.dart';
-import 'package:gifts/screens/Tracking_page.dart';
+import 'package:gifts/screens/tracking_page.dart';
 import 'package:gifts/screens/address_details.dart';
 import 'package:gifts/screens/auth/register_page.dart';
 import 'package:gifts/screens/auth/login_page.dart';
@@ -13,7 +12,6 @@ import 'package:gifts/screens/home_page.dart';
 import 'package:gifts/screens/pick_box_page.dart';
 import 'package:gifts/screens/your_rewards_page.dart';
 import 'package:go_router/go_router.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
 
 class RouterClass {
   final router = GoRouter(
