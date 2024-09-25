@@ -1,11 +1,10 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:gifts/blocs/auth/auth_bloc.dart';
 import 'package:gifts/blocs/product/product_bloc.dart';
-import 'package:gifts/screens/pick_box_page.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -32,7 +31,7 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,7 +42,7 @@ class _HomePageState extends State<HomePage> {
                     height: 122,
                     decoration: BoxDecoration(
                       color: colorScheme.primary,
-                      borderRadius: BorderRadius.only(
+                      borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(22),
                         bottomLeft: Radius.circular(22),
                         bottomRight: Radius.circular(22),
@@ -81,7 +80,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 16,
               ),
               Row(
@@ -100,10 +99,10 @@ class _HomePageState extends State<HomePage> {
                             Container(
                               height: 32,
                               width: 32,
-                              decoration: BoxDecoration(
+                              decoration: const BoxDecoration(
                                   shape: BoxShape.circle, color: Colors.black),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 12,
                             ),
                             Text(
@@ -116,7 +115,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 8,
                   ),
                   Container(
@@ -131,27 +130,27 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 24,
               ),
               Text(
                 "Choose an item you'd like to win",
                 style: textTheme.headlineSmall?.copyWith(fontSize: 20),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 12,
               ),
               Text(
                 'The journey ahead will test your luck and skill. Select wisely, and keep your eye on the prize!',
                 style: textTheme.titleMedium?.copyWith(fontSize: 15),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 22,
               ),
               BlocBuilder<ProductBloc, ProductState>(
                 builder: (context, state) {
                   if (state is ProductInitial) {
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   } else if (state is SuccessProductRetrievalState) {
                     // Assuming products are loaded correctly, display them in ItemContainer
                     final products = state.products;
@@ -181,9 +180,9 @@ class _HomePageState extends State<HomePage> {
                       ],
                     );
                   } else if (state is ErrorProductState) {
-                    return Center(child: Text('unable to fetch products'));
+                    return const Center(child: Text('unable to fetch products'));
                   } else {
-                    return Center(child: Text('Unknown state'));
+                    return const Center(child: Text('Unknown state'));
                   }
                 },
               ),
@@ -215,14 +214,14 @@ class _HomePageState extends State<HomePage> {
                         color: colorScheme.primary,
                         fontSize: 24,
                         fontWeight: FontWeight.w600)),
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
                 Text('Enter your name to continue',
                     style: textTheme.titleLarge
                         ?.copyWith(fontWeight: FontWeight.w600)),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Text('This is for the first time only.',
                     style: textTheme.labelLarge),
-                SizedBox(
+                const SizedBox(
                   height: 12,
                 ),
                 Container(
@@ -245,7 +244,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () async {
                     String name = _nameController.text.trim();
@@ -262,17 +261,17 @@ class _HomePageState extends State<HomePage> {
                         '/pickbox',
                         extra: {
                           'itemName': itemName,
-                          'currentBox': 2,
+                          'currentBox': 1,
                           'itemImageUrl': itemImageUrl,
                         },
                       );
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Please enter a name.')),
+                        const SnackBar(content: Text('Please enter a name.')),
                       );
                     }
                   },
-                  child: Text('Continue'),
+                  child: const Text('Continue'),
                 ),
               ],
             ),
@@ -358,7 +357,7 @@ class ItemContainer extends StatelessWidget {
                       Positioned.fill(
                         child: Container(
                           decoration: BoxDecoration(
-                            gradient: LinearGradient(
+                            gradient: const LinearGradient(
                               colors: [Colors.transparent, Colors.black54],
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
@@ -386,7 +385,7 @@ class ItemContainer extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(width: 16),
+            const SizedBox(width: 16),
             if (item2Name.isNotEmpty && onTapItem2 != null)
               Expanded(
                 child: InkWell(
@@ -411,7 +410,7 @@ class ItemContainer extends StatelessWidget {
                         Positioned.fill(
                           child: Container(
                             decoration: BoxDecoration(
-                              gradient: LinearGradient(
+                              gradient: const LinearGradient(
                                 colors: [Colors.transparent, Colors.black54],
                                 begin: Alignment.topCenter,
                                 end: Alignment.bottomCenter,
@@ -441,7 +440,7 @@ class ItemContainer extends StatelessWidget {
               ),
           ],
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
       ],
     );
   }

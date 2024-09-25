@@ -51,11 +51,11 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(
+                        const SizedBox(
                           height: 80,
                         ),
                         Center(
@@ -64,28 +64,28 @@ class _LoginPageState extends State<LoginPage> {
                           style: textTheme.headlineMedium
                               ?.copyWith(color: colorScheme.onPrimaryFixed),
                         )),
-                        SizedBox(
+                        const SizedBox(
                           height: 115,
                         ),
                         Text(
                           'Log in to your account',
                           style: textTheme.headlineLarge,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 28,
                         ),
                         Text(
                           'Log in to your account to receive your price',
                           style: textTheme.titleMedium,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                         InputTextbox(
                           hintText: 'Username',
                           controller: _emailController,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 16,
                         ),
                         InputTextbox(
@@ -93,33 +93,40 @@ class _LoginPageState extends State<LoginPage> {
                           isPassword: true,
                           controller: _passwordController,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 120,
                         ),
-                        Center(
-                            child: SubmitButtonWidget(
-                          buttonHeight: 56,
-                          buttonWidth: 181,
-                          text: "Continue",
-                          hasIcon: false,
-                          buttonIconUrl: '',
-                          onTapFunction: () {
-                            BlocProvider.of<AuthBloc>(context).add(
-                              LoginEvent(
-                                _emailController.text,
-                                _passwordController.text,
-                              ),
-                            );
+                        Center(child: BlocBuilder<AuthBloc, AuthState>(
+                          builder: (context, state) {
+                            if (state is LoadingState) {
+                              return const CircularProgressIndicator();
+                            } else {
+                              return SubmitButtonWidget(
+                                buttonHeight: 56,
+                                buttonWidth: 181,
+                                text: "Continue",
+                                hasIcon: false,
+                                buttonIconUrl: '',
+                                onTapFunction: () {
+                                  BlocProvider.of<AuthBloc>(context).add(
+                                    LoginEvent(
+                                      _emailController.text,
+                                      _passwordController.text,
+                                    ),
+                                  );
+                                },
+                              );
+                            }
                           },
                         )),
-                        SizedBox(
+                        const SizedBox(
                           height: 48,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             InkWell(
-                              onTap: (){
+                              onTap: () {
                                 GoRouter.of(context).pushNamed('register');
                               },
                               child: Text(
@@ -135,7 +142,7 @@ class _LoginPageState extends State<LoginPage> {
                             )
                           ],
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 70,
                         ),
                         Row(
@@ -149,7 +156,7 @@ class _LoginPageState extends State<LoginPage> {
                                 shape: BoxShape.circle,
                               ),
                             ),
-                            SizedBox(width: 12),
+                            const SizedBox(width: 12),
                             Text(
                               'Your prize is waiting...',
                               style: textTheme.headlineSmall,

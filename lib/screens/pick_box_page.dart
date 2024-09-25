@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gifts/common_widgets/submit_button_widget.dart';
-import 'package:gifts/screens/congratulations_page.dart';
 import 'package:gifts/utils/constants.dart';
 import 'package:go_router/go_router.dart';
 
@@ -22,7 +21,7 @@ class PickBoxPage extends StatefulWidget {
 }
 
 class _PickBoxPageState extends State<PickBoxPage> {
-  int _countdown = 10;
+  int _countdown = 5;
   late Timer _timer;
   bool? isFound;
   int prizeBox = Random().nextInt(2); // Randomize the prize box (0 or 1)
@@ -71,13 +70,13 @@ class _PickBoxPageState extends State<PickBoxPage> {
   void _onNextPressed() {
     if (!isTimerFinished) return; // Disable button if timer not finished
     if (isFound == true) {
-      if (widget.currentBox < 19) {
+      if (widget.currentBox < 12) {
         // Navigate to the next set of boxes
         context.push(
           '/pickbox',
           extra: {
             'itemName': widget.itemName,
-            'currentBox': widget.currentBox + 2,
+            'currentBox': widget.currentBox + 1,
             'itemImageUrl': widget.itemImageUrl
           },
         );
@@ -90,7 +89,7 @@ class _PickBoxPageState extends State<PickBoxPage> {
     } else {
       // Restart the game
       setState(() {
-        _countdown = 10; // Reset countdown
+        _countdown = 5; // Reset countdown
         isFound = null; // Reset found status
         prizeBox = Random().nextInt(2); // Randomize the prize box
         isTimerFinished = false; // Reset timer finished status
@@ -101,7 +100,7 @@ class _PickBoxPageState extends State<PickBoxPage> {
         '/pickbox',
         extra: {
           'itemName': widget.itemName,
-          'currentBox': 2,
+          'currentBox': 1,
           'itemImageUrl': widget.itemImageUrl
         },
       );
@@ -114,9 +113,9 @@ class _PickBoxPageState extends State<PickBoxPage> {
     final colorScheme = Theme.of(context).colorScheme;
     Color progressColor;
 
-    if (_countdown <= 3) {
+    if (_countdown <= 1) {
       progressColor = colorScheme.primary;
-    } else if (_countdown <= 5) {
+    } else if (_countdown <= 3) {
       progressColor = LightThemeAppColors.starColour;
     } else {
       progressColor = Colors.greenAccent;
@@ -194,7 +193,7 @@ class _PickBoxPageState extends State<PickBoxPage> {
                                 height: 76,
                                 width: 76,
                                 child: CircularProgressIndicator(
-                                  value: _countdown / 10,
+                                  value: _countdown / 5,
                                   strokeWidth: 5,
                                   backgroundColor: Colors.grey.shade300,
                                   color: progressColor,
@@ -249,7 +248,7 @@ class _PickBoxPageState extends State<PickBoxPage> {
                               child: Container(
                               width: 87,
                               height: 87,
-                              decoration: BoxDecoration(
+                              decoration: const BoxDecoration(
                                 color: Colors.black,
                                 shape: BoxShape.circle,
                               ),
@@ -291,7 +290,7 @@ class _PickBoxPageState extends State<PickBoxPage> {
                             ),
                           ),
                           Text(
-                            'of 20',
+                            'of 12',
                             style: textTheme.headlineMedium?.copyWith(
                               fontSize: 22,
                               fontWeight: FontWeight.w600,
@@ -343,14 +342,14 @@ class _PickBoxPageState extends State<PickBoxPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          for (int i = 0; i < 9; i++)
+                          for (int i = 0; i < 11; i++)
                             Container(
                               margin:
                                   const EdgeInsets.symmetric(horizontal: 4.0),
                               width: 8.0,
                               height: 8.0,
                               decoration: BoxDecoration(
-                                color: i == (widget.currentBox ~/ 2 - 1)
+                                color: i == (widget.currentBox - 1)
                                     ? colorScheme.primary
                                     : colorScheme.primary.withOpacity(0.3),
                                 shape: BoxShape.circle,

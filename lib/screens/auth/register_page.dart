@@ -95,9 +95,7 @@ class _RegisterPageState extends State<RegisterPage> {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is SuccessRegisterState) {
-          GoRouter.of(context).pushNamed(
-            'addressdetails'
-          );
+          GoRouter.of(context).pushNamed('addressdetails');
         } else if (state is AuthErrorState) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(state.message)),
@@ -118,11 +116,11 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(
+                        const SizedBox(
                           height: 80,
                         ),
                         Center(
@@ -131,28 +129,28 @@ class _RegisterPageState extends State<RegisterPage> {
                           style: textTheme.headlineMedium
                               ?.copyWith(color: colorScheme.onPrimaryFixed),
                         )),
-                        SizedBox(
+                        const SizedBox(
                           height: 115,
                         ),
                         Text(
                           'Create an account',
                           style: textTheme.headlineLarge,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 28,
                         ),
                         Text(
                           'Create an account to receive your price',
                           style: textTheme.titleMedium,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                         InputTextbox(
                           hintText: 'Username',
                           controller: _emailController,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 16,
                         ),
                         InputTextbox(
@@ -160,7 +158,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           isPassword: true,
                           controller: _passwordController,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 16,
                         ),
                         InputTextbox(
@@ -168,19 +166,26 @@ class _RegisterPageState extends State<RegisterPage> {
                           isPassword: true,
                           controller: _confirmPassword,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 48,
                         ),
-                        Center(
-                            child: SubmitButtonWidget(
-                          buttonHeight: 56,
-                          buttonWidth: 181,
-                          text: "Continue",
-                          hasIcon: false,
-                          buttonIconUrl: '',
-                          onTapFunction: validateAndSubmit,
+                        Center(child: BlocBuilder<AuthBloc, AuthState>(
+                          builder: (context, state) {
+                            if (state is LoadingState) {
+                              return const CircularProgressIndicator();
+                            } else {
+                              return SubmitButtonWidget(
+                                buttonHeight: 56,
+                                buttonWidth: 181,
+                                text: "Continue",
+                                hasIcon: false,
+                                buttonIconUrl: '',
+                                onTapFunction: validateAndSubmit,
+                              );
+                            }
+                          },
                         )),
-                        SizedBox(
+                        const SizedBox(
                           height: 48,
                         ),
                         Row(
@@ -203,7 +208,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             )
                           ],
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 70,
                         ),
                         Row(
@@ -217,7 +222,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 shape: BoxShape.circle,
                               ),
                             ),
-                            SizedBox(width: 12),
+                            const SizedBox(width: 12),
                             Text(
                               'Your prize is waiting...',
                               style: textTheme.headlineSmall,
