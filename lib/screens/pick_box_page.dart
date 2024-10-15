@@ -135,6 +135,7 @@ class _PickBoxPageState extends State<PickBoxPage> {
                   padding: const EdgeInsets.all(20),
                   child: Column(
                     children: [
+                      SizedBox(height: 50,),
                       Center(
                         child: Text(
                           isFound == null
@@ -148,14 +149,16 @@ class _PickBoxPageState extends State<PickBoxPage> {
                               fontWeight: FontWeight.w600),
                         ),
                       ),
-                      const SizedBox(height: 32),
+                      const SizedBox(height: 25),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(
-                            'You picked ${widget.itemName}',
-                            style: textTheme.titleLarge?.copyWith(
-                              color: colorScheme.onPrimaryFixed,
+                          Center(
+                            child: Text(
+                              'You picked ${widget.itemName}',
+                              style: textTheme.titleLarge?.copyWith(
+                                color: colorScheme.onPrimaryFixed,
+                              ),
                             ),
                           ),
                           const SizedBox(width: 12),
@@ -177,7 +180,10 @@ class _PickBoxPageState extends State<PickBoxPage> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 90),
+                      SizedBox(height: 12,),
+                      Text('Pick all 12 boxes correctly to \n get the ${widget.itemName}',style: textTheme.titleSmall?.copyWith(
+                                color: colorScheme.onPrimaryFixed,),textAlign: TextAlign.center),
+                      const SizedBox(height: 20),
                       Container(
                         height: 130,
                         width: 130,
@@ -298,14 +304,6 @@ class _PickBoxPageState extends State<PickBoxPage> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 12),
-                      Container(
-                        height: 100,
-                        decoration: BoxDecoration(
-                          color: colorScheme.onTertiary,
-                        ),
-                        child: const Center(child: Text('Test Ad')),
-                      ),
                       const SizedBox(height: 16),
                       if (isFound == null)
                         Container(
@@ -346,8 +344,8 @@ class _PickBoxPageState extends State<PickBoxPage> {
                             Container(
                               margin:
                                   const EdgeInsets.symmetric(horizontal: 4.0),
-                              width: 8.0,
-                              height: 8.0,
+                              width: 10.0,
+                              height: 10.0,
                               decoration: BoxDecoration(
                                 color: i == (widget.currentBox - 1)
                                     ? colorScheme.primary
@@ -359,8 +357,8 @@ class _PickBoxPageState extends State<PickBoxPage> {
                             margin: const EdgeInsets.only(left: 8.0),
                             child: SvgPicture.asset(
                               'assets/icons/gift_small.svg',
-                              height: 16,
-                              width: 16,
+                              height: 30,
+                              width: 30,
                             ),
                           ),
                         ],

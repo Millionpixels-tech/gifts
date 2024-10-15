@@ -36,6 +36,7 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              SizedBox(height: 50,),
               Stack(
                 children: [
                   Container(
@@ -61,75 +62,75 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
-                  Positioned(
-                    top: 0,
-                    right: 0,
-                    child: ClipPath(
-                      clipper: TopRightCutOutClipper(),
-                      child: Container(
-                        color: Colors.white, // The color of the cut-out
-                        width: 30,
-                        height: 30,
-                        child: Icon(
-                          Icons.help,
-                          color: colorScheme.primary,
-                          size: 20,
-                        ),
-                      ),
-                    ),
-                  ),
+                  // Positioned(
+                  //   top: 0,
+                  //   right: 0,
+                  //   child: ClipPath(
+                  //     clipper: TopRightCutOutClipper(),
+                  //     child: Container(
+                  //       color: Colors.white, // The color of the cut-out
+                  //       width: 30,
+                  //       height: 30,
+                  //       child: Icon(
+                  //         Icons.help,
+                  //         color: colorScheme.primary,
+                  //         size: 20,
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
               const SizedBox(
                 height: 16,
               ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      height: 48,
-                      decoration: BoxDecoration(
-                        color: colorScheme.primary,
-                        borderRadius: BorderRadius.circular(32),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          children: [
-                            Container(
-                              height: 32,
-                              width: 32,
-                              decoration: const BoxDecoration(
-                                  shape: BoxShape.circle, color: Colors.black),
-                            ),
-                            const SizedBox(
-                              width: 12,
-                            ),
-                            Text(
-                              'Your Smartwatch is on the way',
-                              style: textTheme.titleSmall
-                                  ?.copyWith(color: colorScheme.onPrimaryFixed),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 8,
-                  ),
-                  Container(
-                    width: 48,
-                    height: 48,
-                    decoration: BoxDecoration(
-                        color: colorScheme.primary, shape: BoxShape.circle),
-                    child: Icon(
-                      Icons.play_arrow,
-                      color: colorScheme.onPrimaryFixed,
-                    ),
-                  ),
-                ],
-              ),
+              // Row(
+              //   children: [
+              //     Expanded(
+              //       child: Container(
+              //         height: 48,
+              //         decoration: BoxDecoration(
+              //           color: colorScheme.primary,
+              //           borderRadius: BorderRadius.circular(32),
+              //         ),
+              //         child: Padding(
+              //           padding: const EdgeInsets.all(8.0),
+              //           child: Row(
+              //             children: [
+              //               Container(
+              //                 height: 32,
+              //                 width: 32,
+              //                 decoration: const BoxDecoration(
+              //                     shape: BoxShape.circle, color: Colors.black),
+              //               ),
+              //               const SizedBox(
+              //                 width: 12,
+              //               ),
+              //               Text(
+              //                 'Your Smartwatch is on the way',
+              //                 style: textTheme.titleSmall
+              //                     ?.copyWith(color: colorScheme.onPrimaryFixed),
+              //               )
+              //             ],
+              //           ),
+              //         ),
+              //       ),
+              //     ),
+              //     const SizedBox(
+              //       width: 8,
+              //     ),
+              //     Container(
+              //       width: 48,
+              //       height: 48,
+              //       decoration: BoxDecoration(
+              //           color: colorScheme.primary, shape: BoxShape.circle),
+              //       child: Icon(
+              //         Icons.play_arrow,
+              //         color: colorScheme.onPrimaryFixed,
+              //       ),
+              //     ),
+              //   ],
+              // ),
               const SizedBox(
                 height: 24,
               ),
