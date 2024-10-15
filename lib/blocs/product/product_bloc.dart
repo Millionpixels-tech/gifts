@@ -1,7 +1,5 @@
-import 'dart:convert';
-
 import 'package:bloc/bloc.dart';
-import 'package:gifts/controllers/api_client.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
 
 part 'product_event.dart';
@@ -10,19 +8,18 @@ part 'product_state.dart';
 class ProductBloc extends Bloc<ProductEvent, ProductState> {
   ProductBloc() : super(ProductInitial()) {
     on<ProductEvent>((event, emit) async {
-      final ApiClient apiClient = ApiClient();
-
       try {
-        final response = await apiClient.get("/product/all");
+        // Get the collection from Firestore (assuming products are stored in a 'products' collection)
+        final QuerySnapshot snapshot =
+            await FirebaseFirestore.instance.collection('products').get();
 
-        if (response.statusCode == 200) {
-          final List<dynamic> products = jsonDecode(response.body);
-          emit(SuccessProductRetrievalState(products));
-        } else {
-          emit(ErrorProductState("Failed to retrieve products."));
-        }
+        // Extract data from snapshot
+        final List<dynamic> products = snapshot.docs
+            .map((doc) => doc.data()) // Get the data from each document
+            .toList();
+        emit(SuccessProductRetrievalState(products));
       } catch (e) {
-        emit(ErrorProductState("An error occured: $e"));
+        emit(ErrorProductState("An error occurred: $e"));
       }
     });
   }

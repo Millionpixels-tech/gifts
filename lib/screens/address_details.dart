@@ -39,12 +39,11 @@ class _AddressDetailsState extends State<AddressDetails> {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final colorScheme = Theme.of(context).colorScheme;
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is SuccessAddressUpdateState) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Address Details Updated Successfully')),
+            const SnackBar(content: Text('Address Details Updated Successfully')),
           );
           GoRouter.of(context).pushNamed('trackingpage');
         } else if (state is AuthErrorState) {

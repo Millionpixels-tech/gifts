@@ -15,11 +15,10 @@ class _TrackingPageState extends State<TrackingPage> {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -28,12 +27,12 @@ class _TrackingPageState extends State<TrackingPage> {
                 'Track Your Sunglasses',
                 style: textTheme.headlineSmall?.copyWith(fontSize: 22),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Text(
                 'Check the status to see when you’ll receive your reward. From winning to delivery, we’ve got you covered every step of the way.',
                 style: textTheme.titleMedium,
               ),
-              SizedBox(height: 28),
+              const SizedBox(height: 28),
               _buildStep(
                 step: 1,
                 title: "Preparing",
@@ -57,7 +56,7 @@ class _TrackingPageState extends State<TrackingPage> {
                 isActive: widget.currentStep == 3,
                 iconUrl: 'assets/icons/prize_delivered.svg',
               ),
-              SizedBox(
+              const SizedBox(
                 height: 34,
               ),
               Center(
@@ -92,10 +91,10 @@ class _TrackingPageState extends State<TrackingPage> {
 
         // Step container
         Padding(
-          padding: EdgeInsets.only(left: 50), // Offset content to the right
+          padding: const EdgeInsets.only(left: 50), // Offset content to the right
           child: Container(
-            padding: EdgeInsets.all(16),
-            margin: EdgeInsets.only(bottom: 20),
+            padding: const EdgeInsets.all(16),
+            margin: const EdgeInsets.only(bottom: 20),
             decoration: BoxDecoration(
               color: isActive ? colorScheme.primary : colorScheme.onTertiary,
               borderRadius: BorderRadius.circular(12),
@@ -103,7 +102,7 @@ class _TrackingPageState extends State<TrackingPage> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(
+                const SizedBox(
                   width: 20,
                 ),
                 SvgPicture.asset(
@@ -111,7 +110,7 @@ class _TrackingPageState extends State<TrackingPage> {
                   height: 52,
                   width: 52,
                 ),
-                SizedBox(width: 35),
+                const SizedBox(width: 35),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -124,7 +123,7 @@ class _TrackingPageState extends State<TrackingPage> {
                               : colorScheme.onPrimary,
                         ),
                       ),
-                      SizedBox(height: 5),
+                      const SizedBox(height: 5),
                       Text(
                         description,
                         style: textTheme.bodyMedium?.copyWith(
@@ -160,7 +159,7 @@ class _TrackingPageState extends State<TrackingPage> {
               ),
               if (step != 3)
                 CustomPaint(
-                  size: Size(2, 100),
+                  size: const Size(2, 100),
                   painter: DottedLinePainter(isActive: isActive),
                 ),
             ],

@@ -15,7 +15,7 @@ class _YourRewardsPageState extends State<YourRewardsPage> {
     final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -23,14 +23,14 @@ class _YourRewardsPageState extends State<YourRewardsPage> {
               'Your Rewards',
               style: textTheme.headlineSmall?.copyWith(fontSize: 22),
             ),
-            SizedBox(
+            const SizedBox(
               height: 16,
             ),
             Text(
               'See all the prizes you’ve won. Track their delivery status and keep winning more!',
               style: textTheme.titleMedium,
             ),
-            SizedBox(
+            const SizedBox(
               height: 28,
             ),
             Stack(
@@ -59,7 +59,7 @@ class _YourRewardsPageState extends State<YourRewardsPage> {
                       width: 183,
                       decoration: BoxDecoration(
                           color: colorScheme.onPrimaryFixed,
-                          borderRadius: BorderRadius.only(
+                          borderRadius: const BorderRadius.only(
                               bottomRight: Radius.circular(12))),
                       child: Row(
                         children: [
@@ -76,7 +76,7 @@ class _YourRewardsPageState extends State<YourRewardsPage> {
                     ))
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 24,
             ),
             Stack(
@@ -105,7 +105,7 @@ class _YourRewardsPageState extends State<YourRewardsPage> {
                       width: 183,
                       decoration: BoxDecoration(
                           color: colorScheme.onPrimaryFixed,
-                          borderRadius: BorderRadius.only(
+                          borderRadius: const BorderRadius.only(
                               bottomRight: Radius.circular(12))),
                       child: Row(
                         children: [
@@ -122,8 +122,8 @@ class _YourRewardsPageState extends State<YourRewardsPage> {
                     ))
               ],
             ),
-            Spacer(),
-            Center(
+            const Spacer(),
+            const Center(
                 child: SubmitButtonWidget(
                     buttonHeight: 56,
                     buttonWidth: 220,

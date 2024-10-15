@@ -44,7 +44,7 @@ class _CongratulationsPageState extends State<CongratulationsPage> {
               blastDirectionality:
                   BlastDirectionality.explosive, // Blast in all directions
               shouldLoop: true, // Loop confetti animation
-              colors: [
+              colors: const [
                 Colors.red,
                 Colors.green,
                 Colors.blue,
@@ -64,25 +64,25 @@ class _CongratulationsPageState extends State<CongratulationsPage> {
                     clipper: TopCircleClipper1(),
                     child: Container(
                       height: 300,
-                      color: Color(0xFFFFD233),
+                      color: const Color(0xFFFFD233),
                     ),
                   ),
                   ClipPath(
                     clipper: TopCircleClipper2(),
                     child: Container(
                       height: 250,
-                      color: Color(0xFFFFBB1B),
+                      color: const Color(0xFFFFBB1B),
                     ),
                   ),
                   ClipPath(
                     clipper: TopCircleClipper3(),
                     child: Container(
                       height: 200,
-                      color: Color(0xFFFFAF0E),
+                      color: const Color(0xFFFFAF0E),
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(20),
                     child: Column(
                       children: [
                         Center(
@@ -94,7 +94,7 @@ class _CongratulationsPageState extends State<CongratulationsPage> {
                                 color: colorScheme.onPrimaryFixed),
                           ),
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         Center(
                           child: Text(
                             'You Won',
@@ -104,7 +104,7 @@ class _CongratulationsPageState extends State<CongratulationsPage> {
                                 color: colorScheme.onPrimaryFixed),
                           ),
                         ),
-                        SizedBox(height: 73),
+                        const SizedBox(height: 73),
                         Container(
                           height: 230,
                           width: 230,
@@ -112,7 +112,7 @@ class _CongratulationsPageState extends State<CongratulationsPage> {
                             color: Colors.black,
                             borderRadius: BorderRadius.circular(24),
                             border:
-                                Border.all(width: 3, color: Color(0xFFFFD233)),
+                                Border.all(width: 3, color: const Color(0xFFFFD233)),
                           ),
                           child: Image.network(
                           widget.itemImageUrl,
@@ -128,7 +128,7 @@ class _CongratulationsPageState extends State<CongratulationsPage> {
                   ),
                 ],
               ),
-              Spacer(),
+              const Spacer(),
               Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: InkWell(

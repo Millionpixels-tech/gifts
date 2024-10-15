@@ -20,3 +20,5 @@ class SuccessRegisterState extends AuthState{}
 class SuccessAddressUpdateState extends AuthState{}
 
 class SuccessNameUpdateState extends AuthState{}
+
+class LoadingState extends AuthState{}
